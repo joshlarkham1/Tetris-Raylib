@@ -9,6 +9,7 @@ public:
 	void Draw();
 	bool MoveBlockDown();
 	void HandleInput();
+	void Reset();
 	bool gameOver;
 	int score;
 
@@ -22,7 +23,6 @@ private:
 	void LockBlock();
 	void RotateBlock();
 	bool IsBlockOutside();
-	void Reset();
 	void UpdateScore(int linesCleared, int moveDownPoints);
 	Grid grid;
 	std::vector<Block> blocks;

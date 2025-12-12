@@ -10,7 +10,6 @@ double leftHoldTime = 0;
 double rightHoldTime = 0;
 double downHoldTime = 0;
 
-
 Game::Game()
 {
 	grid = Grid();
@@ -206,7 +205,9 @@ void Game::Reset()
 	currentBlock = GetRandomBlock();
 	nextBlock = GetRandomBlock();
 	score = 0;
+	gameOver = false;
 }
+
 
 void Game::UpdateScore(int linesCleared, int moveDownPoints)
 {
@@ -237,13 +238,13 @@ void Game::Draw()
 	switch (nextBlock.id)
 	{
 	case 3:
-		nextBlock.Draw(255, 310); // I BLOCK
+		nextBlock.Draw(255, 30); // I BLOCK
 		break;
 	case 4:
-		nextBlock.Draw(255, 280); // O BLOCK
+		nextBlock.Draw(255, 290); // O BLOCK
 		break;
 	default:
-		nextBlock.Draw(270, 270);
+		nextBlock.Draw(270, 290);
 		break;
 	}
 }
