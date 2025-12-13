@@ -3,7 +3,7 @@
 #include <random>
 
 // input vars
-const double DAS = 0.18;	// delay auto shift
+const double DAS = 0.14;	// delay auto shift
 const double ARR = 0.04;	// auto repeat rate
 
 double leftHoldTime = 0;
@@ -18,7 +18,29 @@ Game::Game()
 	nextBlock = GetRandomBlock();
 	gameOver = false;
 	score = 0;
+	InitAudioDevice();
+	SetMasterVolume(0.4);
+	music = LoadMusicStream("Sounds/Strobe.mp3");
+	SetMusicVolume(music, 0.2);
+	rotateSound = LoadSound("Sounds/Rotate.mp3");
+	clearSound = LoadSound("Sounds/Linebreak.mp3");
+	tetrisSound = LoadSound("Sounds/Tetris.mp3");
+	gameOverSound = LoadSound("Sounds/Gameover.mp3");
+	contactSound = LoadSound("Sounds/Contact.mp3");
+	moveSound = LoadSound("Sounds/Move.mp3");
+	PlayMusicStream(music);
+}
 
+Game::~Game()
+{
+	UnloadSound(rotateSound);
+	UnloadSound(clearSound);
+	UnloadSound(tetrisSound);
+	UnloadSound(gameOverSound);
+	UnloadSound(contactSound);
+	UnloadSound(moveSound);
+	UnloadMusicStream(music);
+	CloseAudioDevice();
 }
 
 Block Game::GetRandomBlock()
@@ -118,7 +140,6 @@ void Game::HandleInput()
 		RotateBlock();
 }
 
-
 bool Game::BlockFits()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPositions();
@@ -175,6 +196,7 @@ void Game::LockBlock()
 	Block testBlock = nextBlock;
 	if (!BlockFitsTest(testBlock))
 	{
+		PlaySound(gameOverSound);
 		gameOver = true;
 		return;
 	}
@@ -182,6 +204,18 @@ void Game::LockBlock()
 	currentBlock = nextBlock;
 	nextBlock = GetRandomBlock();
 	int rowsCleared = grid.ClearFullRows();
+	if (rowsCleared > 0 && rowsCleared < 4)
+	{
+		PlaySound(clearSound);
+	}
+	else if (rowsCleared > 0)
+	{
+		PlaySound(tetrisSound);
+	}
+	else
+	{
+		PlaySound(contactSound);
+	}
 	UpdateScore(rowsCleared, 0);
 }
 
@@ -238,13 +272,13 @@ void Game::Draw()
 	switch (nextBlock.id)
 	{
 	case 3:
-		nextBlock.Draw(255, 30); // I BLOCK
+		nextBlock.Draw(255, 320); // I BLOCK
 		break;
 	case 4:
-		nextBlock.Draw(255, 290); // O BLOCK
+		nextBlock.Draw(255, 300); // O BLOCK
 		break;
 	default:
-		nextBlock.Draw(270, 290);
+		nextBlock.Draw(270, 300);
 		break;
 	}
 }
@@ -298,6 +332,10 @@ void Game::RotateBlock()
 		if (IsBlockOutside() || BlockFits() == false)
 		{
 			currentBlock.Unrotate();
+		}
+		else
+		{
+			PlaySound(rotateSound);
 		}
 	}
 }

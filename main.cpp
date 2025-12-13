@@ -24,6 +24,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        UpdateMusicStream(game.music);
         double t = GetTime();
         BeginDrawing();
         ClearBackground(darkGrey);

@@ -6,12 +6,14 @@ class Game
 {
 public:
 	Game();
+	~Game();
 	void Draw();
 	bool MoveBlockDown();
 	void HandleInput();
 	void Reset();
 	bool gameOver;
 	int score;
+	Music music;
 
 private:
 	Block GetRandomBlock();
@@ -28,4 +30,10 @@ private:
 	std::vector<Block> blocks;
 	Block currentBlock;
 	Block nextBlock;
+	Sound rotateSound;
+	Sound clearSound;
+	Sound gameOverSound;
+	Sound tetrisSound;
+	Sound moveSound;
+	Sound contactSound;
 };
